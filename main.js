@@ -2,6 +2,8 @@
 // Created: 2025-12-19 23:02:23 UTC
 
 const API_BASE_URL = 'https://api.nutrition-tracker.com/api';
+// Backend API URL for food and BMI calculator endpoints
+const BACKEND_API_URL = 'http://localhost:5000/api';
 
 /**
  * Fetch all users nutrition data
@@ -309,6 +311,151 @@ async function fetchFoodDetails(foodId) {
   }
 }
 
+// ============================================================
+// Backend API Functions - Food and BMI Calculator Endpoints
+// ============================================================
+
+/**
+ * Get all foods from backend
+ * @returns {Promise<Array>} Array of food items
+ */
+async function getAllFoods() {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/food`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching all foods:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get food by ID from backend
+ * @param {string|number} id - Food ID
+ * @returns {Promise<Object>} Food object
+ */
+async function getFoodById(id) {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/food/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching food with ID ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Create a new food item
+ * @param {Object} foodData - Food data object
+ * @returns {Promise<Object>} Created food object
+ */
+async function createFood(foodData) {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/food`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(foodData),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating food:', error);
+    throw error;
+  }
+}
+
+/**
+ * Update an existing food item
+ * @param {string|number} id - Food ID
+ * @param {Object} foodData - Updated food data
+ * @returns {Promise<Object>} Updated food object
+ */
+async function updateFood(id, foodData) {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/food/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(foodData),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error updating food with ID ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Delete a food item
+ * @param {string|number} id - Food ID
+ * @returns {Promise<Object>} Deletion response
+ */
+async function deleteFood(id) {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/food/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Error deleting food with ID ${id}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Calculate BMI and macros
+ * @param {Object} data - User data (weight, height, age, gender, activity level, goal)
+ * @returns {Promise<Object>} BMI and macro calculations
+ */
+async function calculateMacros(data) {
+  try {
+    const response = await fetch(`${BACKEND_API_URL}/bmicalculator/calculate-macros`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error calculating macros:', error);
+    throw error;
+  }
+}
+
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
@@ -325,5 +472,11 @@ if (typeof module !== 'undefined' && module.exports) {
     updateNutritionGoals,
     searchFoods,
     fetchFoodDetails,
+    getAllFoods,
+    getFoodById,
+    createFood,
+    updateFood,
+    deleteFood,
+    calculateMacros,
   };
 }

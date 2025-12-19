@@ -1,13 +1,255 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>About</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Nutrition Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .nav {
+      margin-bottom: 20px;
+    }
+    .nav a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin-right: 15px;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .food-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .food-item {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .food-item h3 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+    .food-item p {
+      margin: 5px 0;
+      color: #666;
+    }
+    .success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+    .success.show {
+      display: block;
+    }
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+    .error.show {
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+  </div>
 
-<h2>About This Project</h2>
-<p>This is a simple nutrition website built using HTML, CSS, JavaScript, and Node.js.</p>
+  <div class="container">
+    <h1>About This Project</h1>
+    <p>This is a nutrition tracking website built using HTML, CSS, and JavaScript. It integrates with a backend API to help you track your food intake and calculate your daily nutritional needs.</p>
+    
+    <h2>Features:</h2>
+    <ul>
+      <li>Track food items with detailed nutritional information</li>
+      <li>Add, update, and delete food entries</li>
+      <li>Calculate your BMI and daily macro requirements</li>
+      <li>Get personalized nutrition recommendations based on your goals</li>
+    </ul>
+    
+    <h2>Technologies:</h2>
+    <ul>
+      <li>Frontend: HTML, CSS, JavaScript (Fetch API)</li>
+      <li>Backend: ASP.NET Core Web API (MVC)</li>
+      <li>Database: SQL Server</li>
+    </ul>
+  </div>
 
+  <!-- Food Database Section -->
+  <div class="container">
+    <h2>Food Database</h2>
+    <p>Browse our comprehensive food database:</p>
+    <button onclick="loadFoods()">Load Foods</button>
+    <div id="foodList" class="food-list"></div>
+    <div id="foodListError" class="error"></div>
+  </div>
+
+  <!-- Quick Add Food Form -->
+  <div class="container">
+    <h2>Quick Add Food</h2>
+    <form id="quickAddForm" onsubmit="handleQuickAddFood(event)">
+      <div class="form-group">
+        <label for="quickFoodName">Food Name:</label>
+        <input type="text" id="quickFoodName" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="quickCalories">Calories:</label>
+        <input type="number" id="quickCalories" name="calories" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="quickProtein">Protein (g):</label>
+        <input type="number" id="quickProtein" name="protein" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="quickCarbs">Carbohydrates (g):</label>
+        <input type="number" id="quickCarbs" name="carbs" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="quickFats">Fats (g):</label>
+        <input type="number" id="quickFats" name="fats" min="0" step="0.1" required>
+      </div>
+      <button type="submit">Add to Database</button>
+    </form>
+    <div id="quickAddSuccess" class="success"></div>
+    <div id="quickAddError" class="error"></div>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    // HTML escape helper function to prevent XSS
+    function escapeHtml(unsafe) {
+      if (unsafe === null || unsafe === undefined) return '';
+      return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Load and display all foods
+    async function loadFoods() {
+      const foodList = document.getElementById('foodList');
+      const errorDiv = document.getElementById('foodListError');
+      
+      try {
+        errorDiv.classList.remove('show');
+        foodList.innerHTML = '<p>Loading foods...</p>';
+        
+        const foods = await getAllFoods();
+        
+        if (foods && foods.length > 0) {
+          foodList.innerHTML = foods.map(food => `
+            <div class="food-item">
+              <h3>${escapeHtml(food.name) || 'Unnamed Food'}</h3>
+              <p><strong>Calories:</strong> ${food.calories || 0} kcal</p>
+              <p><strong>Protein:</strong> ${food.protein || 0}g</p>
+              <p><strong>Carbs:</strong> ${food.carbs || food.carbohydrates || 0}g</p>
+              <p><strong>Fats:</strong> ${food.fats || food.fat || 0}g</p>
+            </div>
+          `).join('');
+        } else {
+          foodList.innerHTML = '<p>No foods found in the database.</p>';
+        }
+      } catch (error) {
+        console.error('Error loading foods:', error);
+        foodList.innerHTML = '';
+        errorDiv.textContent = 'Error loading foods: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+
+    // Handle quick add food form submission
+    async function handleQuickAddFood(event) {
+      event.preventDefault();
+      
+      const successDiv = document.getElementById('quickAddSuccess');
+      const errorDiv = document.getElementById('quickAddError');
+      successDiv.classList.remove('show');
+      errorDiv.classList.remove('show');
+      
+      const formData = new FormData(event.target);
+      const foodData = {
+        name: formData.get('name'),
+        calories: parseFloat(formData.get('calories')),
+        protein: parseFloat(formData.get('protein')),
+        carbs: parseFloat(formData.get('carbs')),
+        fats: parseFloat(formData.get('fats'))
+      };
+      
+      try {
+        const result = await createFood(foodData);
+        successDiv.textContent = 'Food added to database successfully!';
+        successDiv.classList.add('show');
+        event.target.reset();
+        
+        // Reload foods if they are already displayed
+        const foodList = document.getElementById('foodList');
+        if (foodList.innerHTML !== '') {
+          loadFoods();
+        }
+      } catch (error) {
+        console.error('Error adding food:', error);
+        errorDiv.textContent = 'Error adding food: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+  </script>
 </body>
 </html>
