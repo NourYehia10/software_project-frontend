@@ -9,7 +9,7 @@ async function calculateBMI() {
   });
 
   const data = await res.json();
-  document.getElementBy("result").innerText = "BMI = " + data.bmi;
+  document.getElementById("result").innerText = "BMI = " + data.bmi;
 }
 
 async function calculateCalories() {
