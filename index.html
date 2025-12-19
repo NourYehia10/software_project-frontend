@@ -272,6 +272,17 @@
 
   <script src="main.js"></script>
   <script>
+    // HTML escape helper function to prevent XSS
+    function escapeHtml(unsafe) {
+      if (unsafe === null || unsafe === undefined) return '';
+      return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     // Load foods when page loads
     window.addEventListener('DOMContentLoaded', () => {
       loadFoods();
@@ -291,13 +302,13 @@
         if (foods && foods.length > 0) {
           foodList.innerHTML = foods.map(food => `
             <div class="food-item">
-              <h3>${food.name || 'Unnamed Food'}</h3>
+              <h3>${escapeHtml(food.name) || 'Unnamed Food'}</h3>
               <p><strong>Calories:</strong> ${food.calories || 0} kcal</p>
               <p><strong>Protein:</strong> ${food.protein || 0}g</p>
               <p><strong>Carbs:</strong> ${food.carbs || food.carbohydrates || 0}g</p>
               <p><strong>Fats:</strong> ${food.fats || food.fat || 0}g</p>
-              <button class="delete-btn" onclick="handleDeleteFood('${food.id}')">Delete</button>
-              <button class="update-btn" onclick="populateUpdateForm('${food.id}', '${food.name}', ${food.calories}, ${food.protein}, ${food.carbs || food.carbohydrates}, ${food.fats || food.fat})">Edit</button>
+              <button class="delete-btn" onclick="handleDeleteFood('${escapeHtml(food.id)}')">Delete</button>
+              <button class="update-btn" onclick="populateUpdateForm('${escapeHtml(food.id)}', '${escapeHtml(food.name)}', ${food.calories || 0}, ${food.protein || 0}, ${food.carbs || food.carbohydrates || 0}, ${food.fats || food.fat || 0})">Edit</button>
             </div>
           `).join('');
         } else {
