@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nutrition Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    button.delete-btn {
+      background-color: #f44336;
+    }
+    button.delete-btn:hover {
+      background-color: #da190b;
+    }
+    button.update-btn {
+      background-color: #2196F3;
+    }
+    button.update-btn:hover {
+      background-color: #0b7dda;
+    }
+    .food-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .food-item {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .food-item h3 {
+      margin-top: 0;
+      color: #4CAF50;
+    }
+    .food-item p {
+      margin: 5px 0;
+      color: #666;
+    }
+    .food-item button {
+      width: auto;
+      padding: 8px 15px;
+      margin-right: 5px;
+      margin-top: 10px;
+    }
+    .results {
+      background-color: #e8f5e9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: none;
+    }
+    .results.show {
+      display: block;
+    }
+    .results h3 {
+      margin-top: 0;
+      color: #2e7d32;
+    }
+    .results p {
+      margin: 8px 0;
+    }
+    .error {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+    .error.show {
+      display: block;
+    }
+    .success {
+      background-color: #e8f5e9;
+      color: #2e7d32;
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+    .success.show {
+      display: block;
+    }
+    .nav {
+      margin-bottom: 20px;
+    }
+    .nav a {
+      color: #4CAF50;
+      text-decoration: none;
+      margin-right: 15px;
+      font-weight: bold;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+  </div>
+
+  <h1>Nutrition Tracker</h1>
+
+  <!-- Food List Section -->
+  <div class="container">
+    <h2>Food Items</h2>
+    <button onclick="loadFoods()">Refresh Food List</button>
+    <div id="foodList" class="food-list"></div>
+    <div id="foodListError" class="error"></div>
+  </div>
+
+  <!-- Add Food Form -->
+  <div class="container">
+    <h2>Add New Food</h2>
+    <form id="addFoodForm" onsubmit="handleAddFood(event)">
+      <div class="form-group">
+        <label for="foodName">Food Name:</label>
+        <input type="text" id="foodName" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="calories">Calories:</label>
+        <input type="number" id="calories" name="calories" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="protein">Protein (g):</label>
+        <input type="number" id="protein" name="protein" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="carbs">Carbohydrates (g):</label>
+        <input type="number" id="carbs" name="carbs" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="fats">Fats (g):</label>
+        <input type="number" id="fats" name="fats" min="0" step="0.1" required>
+      </div>
+      <button type="submit">Add Food</button>
+    </form>
+    <div id="addFoodSuccess" class="success"></div>
+    <div id="addFoodError" class="error"></div>
+  </div>
+
+  <!-- Update Food Form -->
+  <div class="container">
+    <h2>Update Food</h2>
+    <form id="updateFoodForm" onsubmit="handleUpdateFood(event)">
+      <div class="form-group">
+        <label for="updateFoodId">Food ID:</label>
+        <input type="text" id="updateFoodId" name="id" required>
+      </div>
+      <div class="form-group">
+        <label for="updateFoodName">Food Name:</label>
+        <input type="text" id="updateFoodName" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="updateCalories">Calories:</label>
+        <input type="number" id="updateCalories" name="calories" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="updateProtein">Protein (g):</label>
+        <input type="number" id="updateProtein" name="protein" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="updateCarbs">Carbohydrates (g):</label>
+        <input type="number" id="updateCarbs" name="carbs" min="0" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="updateFats">Fats (g):</label>
+        <input type="number" id="updateFats" name="fats" min="0" step="0.1" required>
+      </div>
+      <button type="submit" class="update-btn">Update Food</button>
+    </form>
+    <div id="updateFoodSuccess" class="success"></div>
+    <div id="updateFoodError" class="error"></div>
+  </div>
+
+  <!-- BMI/Macros Calculator -->
+  <div class="container">
+    <h2>BMI & Macros Calculator</h2>
+    <form id="bmiForm" onsubmit="handleCalculateMacros(event)">
+      <div class="form-group">
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" name="weight" min="1" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" name="height" min="1" step="0.1" required>
+      </div>
+      <div class="form-group">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="1" max="120" required>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="activityLevel">Activity Level:</label>
+        <select id="activityLevel" name="activityLevel" required>
+          <option value="">Select Activity Level</option>
+          <option value="sedentary">Sedentary (little or no exercise)</option>
+          <option value="light">Lightly Active (1-3 days/week)</option>
+          <option value="moderate">Moderately Active (3-5 days/week)</option>
+          <option value="active">Very Active (6-7 days/week)</option>
+          <option value="extra">Extra Active (athlete, 2x/day)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="goal">Goal:</label>
+        <select id="goal" name="goal" required>
+          <option value="">Select Goal</option>
+          <option value="lose">Lose Weight</option>
+          <option value="maintain">Maintain Weight</option>
+          <option value="gain">Gain Weight</option>
+        </select>
+      </div>
+      <button type="submit">Calculate</button>
+    </form>
+    <div id="bmiResults" class="results"></div>
+    <div id="bmiError" class="error"></div>
+  </div>
+
+  <script src="main.js"></script>
+  <script>
+    // Load foods when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFoods();
+    });
+
+    // Load and display all foods
+    async function loadFoods() {
+      const foodList = document.getElementById('foodList');
+      const errorDiv = document.getElementById('foodListError');
+      
+      try {
+        errorDiv.classList.remove('show');
+        foodList.innerHTML = '<p>Loading foods...</p>';
+        
+        const foods = await getAllFoods();
+        
+        if (foods && foods.length > 0) {
+          foodList.innerHTML = foods.map(food => `
+            <div class="food-item">
+              <h3>${food.name || 'Unnamed Food'}</h3>
+              <p><strong>Calories:</strong> ${food.calories || 0} kcal</p>
+              <p><strong>Protein:</strong> ${food.protein || 0}g</p>
+              <p><strong>Carbs:</strong> ${food.carbs || food.carbohydrates || 0}g</p>
+              <p><strong>Fats:</strong> ${food.fats || food.fat || 0}g</p>
+              <button class="delete-btn" onclick="handleDeleteFood('${food.id}')">Delete</button>
+              <button class="update-btn" onclick="populateUpdateForm('${food.id}', '${food.name}', ${food.calories}, ${food.protein}, ${food.carbs || food.carbohydrates}, ${food.fats || food.fat})">Edit</button>
+            </div>
+          `).join('');
+        } else {
+          foodList.innerHTML = '<p>No foods found. Add some foods to get started!</p>';
+        }
+      } catch (error) {
+        console.error('Error loading foods:', error);
+        foodList.innerHTML = '';
+        errorDiv.textContent = 'Error loading foods: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+
+    // Handle add food form submission
+    async function handleAddFood(event) {
+      event.preventDefault();
+      
+      const successDiv = document.getElementById('addFoodSuccess');
+      const errorDiv = document.getElementById('addFoodError');
+      successDiv.classList.remove('show');
+      errorDiv.classList.remove('show');
+      
+      const formData = new FormData(event.target);
+      const foodData = {
+        name: formData.get('name'),
+        calories: parseFloat(formData.get('calories')),
+        protein: parseFloat(formData.get('protein')),
+        carbs: parseFloat(formData.get('carbs')),
+        fats: parseFloat(formData.get('fats'))
+      };
+      
+      try {
+        const result = await createFood(foodData);
+        successDiv.textContent = 'Food added successfully!';
+        successDiv.classList.add('show');
+        event.target.reset();
+        loadFoods(); // Refresh the food list
+      } catch (error) {
+        console.error('Error adding food:', error);
+        errorDiv.textContent = 'Error adding food: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+
+    // Populate update form with food data
+    function populateUpdateForm(id, name, calories, protein, carbs, fats) {
+      document.getElementById('updateFoodId').value = id;
+      document.getElementById('updateFoodName').value = name;
+      document.getElementById('updateCalories').value = calories;
+      document.getElementById('updateProtein').value = protein;
+      document.getElementById('updateCarbs').value = carbs;
+      document.getElementById('updateFats').value = fats;
+      
+      // Scroll to update form
+      document.getElementById('updateFoodForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Handle update food form submission
+    async function handleUpdateFood(event) {
+      event.preventDefault();
+      
+      const successDiv = document.getElementById('updateFoodSuccess');
+      const errorDiv = document.getElementById('updateFoodError');
+      successDiv.classList.remove('show');
+      errorDiv.classList.remove('show');
+      
+      const formData = new FormData(event.target);
+      const id = formData.get('id');
+      const foodData = {
+        name: formData.get('name'),
+        calories: parseFloat(formData.get('calories')),
+        protein: parseFloat(formData.get('protein')),
+        carbs: parseFloat(formData.get('carbs')),
+        fats: parseFloat(formData.get('fats'))
+      };
+      
+      try {
+        const result = await updateFood(id, foodData);
+        successDiv.textContent = 'Food updated successfully!';
+        successDiv.classList.add('show');
+        loadFoods(); // Refresh the food list
+      } catch (error) {
+        console.error('Error updating food:', error);
+        errorDiv.textContent = 'Error updating food: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+
+    // Handle delete food
+    async function handleDeleteFood(id) {
+      if (!confirm('Are you sure you want to delete this food?')) {
+        return;
+      }
+      
+      try {
+        await deleteFood(id);
+        loadFoods(); // Refresh the food list
+      } catch (error) {
+        console.error('Error deleting food:', error);
+        alert('Error deleting food: ' + error.message);
+      }
+    }
+
+    // Handle BMI/Macros calculation
+    async function handleCalculateMacros(event) {
+      event.preventDefault();
+      
+      const resultsDiv = document.getElementById('bmiResults');
+      const errorDiv = document.getElementById('bmiError');
+      resultsDiv.classList.remove('show');
+      errorDiv.classList.remove('show');
+      
+      const formData = new FormData(event.target);
+      const data = {
+        weight: parseFloat(formData.get('weight')),
+        height: parseFloat(formData.get('height')),
+        age: parseInt(formData.get('age')),
+        gender: formData.get('gender'),
+        activityLevel: formData.get('activityLevel'),
+        goal: formData.get('goal')
+      };
+      
+      try {
+        const result = await calculateMacros(data);
+        
+        // Display results (adjust based on actual API response structure)
+        let resultsHTML = '<h3>Your Results</h3>';
+        
+        if (result.bmi !== undefined) {
+          resultsHTML += `<p><strong>BMI:</strong> ${result.bmi.toFixed(2)}</p>`;
+        }
+        
+        if (result.bmr !== undefined) {
+          resultsHTML += `<p><strong>BMR:</strong> ${result.bmr.toFixed(0)} calories/day</p>`;
+        }
+        
+        if (result.tdee !== undefined) {
+          resultsHTML += `<p><strong>TDEE:</strong> ${result.tdee.toFixed(0)} calories/day</p>`;
+        }
+        
+        if (result.dailyCalories !== undefined) {
+          resultsHTML += `<p><strong>Daily Calorie Target:</strong> ${result.dailyCalories.toFixed(0)} calories/day</p>`;
+        }
+        
+        if (result.protein !== undefined) {
+          resultsHTML += `<p><strong>Protein:</strong> ${result.protein.toFixed(1)}g/day</p>`;
+        }
+        
+        if (result.carbs !== undefined) {
+          resultsHTML += `<p><strong>Carbohydrates:</strong> ${result.carbs.toFixed(1)}g/day</p>`;
+        }
+        
+        if (result.fats !== undefined) {
+          resultsHTML += `<p><strong>Fats:</strong> ${result.fats.toFixed(1)}g/day</p>`;
+        }
+        
+        resultsDiv.innerHTML = resultsHTML;
+        resultsDiv.classList.add('show');
+      } catch (error) {
+        console.error('Error calculating macros:', error);
+        errorDiv.textContent = 'Error calculating macros: ' + error.message;
+        errorDiv.classList.add('show');
+      }
+    }
+  </script>
+</body>
+</html>
