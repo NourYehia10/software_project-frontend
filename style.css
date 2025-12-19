@@ -1,13 +1,13 @@
 body {
   font-family: Arial;
   background: #f4f6f8;
-  padding: 20px;
+  padding: 40px;
 }
 
 nav a {
   margin-right: 15px;
   text-decoration: none;
-  color: green;
+  color: rgb(0, 41, 128);
 }
 
 input, select, button {
