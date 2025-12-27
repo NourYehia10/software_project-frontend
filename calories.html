@@ -1,27 +1,94 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Calorie Calculator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calorie Calculator - Nutrition Hub</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-<h2>Calorie Calculator</h2>
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="bmi.html">⚖️ BMI Calculator</a>
+  <a href="calories.html">🔥 Calorie Calculator</a>
+  <a href="about.html">ℹ️ About</a>
+  <a href="contact.html">📧 Contact</a>
+</nav>
 
-<input id="cWeight" type="number" placeholder="Weight (kg)">
-<input id="cHeight" type="number" placeholder="Height (cm)">
-<input id="age" type="number" placeholder="Age">
+<h1>🔥 Calorie Calculator</h1>
 
-<select id="activity">
-  <option value="1.2">Sedentary</option>
-  <option value="1.375">Light</option>
-  <option value="1.55">Moderate</option>
-  <option value="1.725">Active</option>
-</select>
+<div class="container">
+  <img src="https://images.unsplash.com/photo-1505576399279-565b52ce32f0?w=800&h=400&fit=crop" alt="Healthy Meal" class="hero-image">
+  
+  <p>Calculate your daily calorie requirements based on your personal metrics and activity level. This helps you manage your diet effectively for your fitness goals.</p>
+  
+  <h2 style="border: none;">Find Your Daily Calorie Needs</h2>
+  
+  <form onsubmit="event.preventDefault(); calculateCalories();">
+    <input type="number" id="cWeight" placeholder="Weight (kg)" step="0.1" required>
+    <input type="number" id="cHeight" placeholder="Height (cm)" step="0.1" required>
+    <input type="number" id="age" placeholder="Age (years)" step="1" required>
+    
+    <select id="activity" required>
+      <option value="">Select Activity Level</option>
+      <option value="1.2">🛋️ Sedentary (little or no exercise)</option>
+      <option value="1.375">🚶 Lightly Active (1-3 days/week)</option>
+      <option value="1.55">🏃 Moderately Active (3-5 days/week)</option>
+      <option value="1.725">⚡ Very Active (6-7 days/week)</option>
+    </select>
+    
+    <button type="submit">Calculate Calories</button>
+  </form>
 
-<button onclick="calculateCalories()">Calculate Calories</button>
+  <div id="result"></div>
 
-<p id="result"></p>
+  <h2>Activity Levels Explained</h2>
+  <div class="feature-cards">
+    <div class="card">
+      <div class="card-icon">🛋️</div>
+      <h3>Sedentary</h3>
+      <p>Little or no exercise. Mostly sitting or standing work.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚶</div>
+      <h3>Lightly Active</h3>
+      <p>Light exercise 1-3 days per week or occasional walks.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏃</div>
+      <h3>Moderately Active</h3>
+      <p>Moderate exercise 3-5 days per week. Regular workouts.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Very Active</h3>
+      <p>Intense exercise 6-7 days per week. High intensity workouts.</p>
+    </div>
+  </div>
+
+  <h2>Tips for Success</h2>
+  <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=400&fit=crop" alt="Fitness Goals" class="section-image">
+  
+  <div class="feature-cards">
+    <div class="card">
+      <div class="card-icon">📌</div>
+      <h3>Set Goals</h3>
+      <p>Know whether you want to lose, gain, or maintain weight to adjust calorie intake accordingly.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📝</div>
+      <h3>Track Intake</h3>
+      <p>Keep a food diary to monitor your calorie consumption and stay on track with your goals.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💪</div>
+      <h3>Exercise Regularly</h3>
+      <p>Combine calorie awareness with regular physical activity for optimal health results.</p>
+    </div>
+  </div>
+
+</div>
 
 <script src="../js/main.js"></script>
 </body>
