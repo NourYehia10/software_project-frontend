@@ -1,0 +1,71 @@
+<<<<<<< HEAD
+test
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMI Calculator - Nutrition Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="bmi.html">⚖ BMI Calculator</a>
+  <a href="calories.html">🔥 Calorie Calculator</a>
+  <a href="about.html">ℹ About</a>
+  <a href="contact.html">📧 Contact</a>
+</nav>
+
+<h1>⚖ BMI Calculator</h1>
+
+<div class="container">
+  <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop" alt="Measuring Weight" class="hero-image">
+  
+  <p>Discover your Body Mass Index and get personalized health insights. BMI is a simple measure that helps assess whether a person's weight is healthy for their height.</p>
+  
+  <h2 style="border: none;">Calculate Your BMI</h2>
+  
+  <form onsubmit="event.preventDefault(); calculateBMI();">
+    <input type="number" id="weight" placeholder="Weight (kg)" step="0.1" required>
+    <input type="number" id="height" placeholder="Height (cm)" step="0.1" required>
+    <button type="submit">Calculate BMI</button>
+  </form>
+
+  <div id="result"></div>
+
+  <h2>Understanding Your Results</h2>
+  <div class="feature-cards">
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <h3>Underweight</h3>
+      <p>BMI less than 18.5</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">✓</div>
+      <h3>Normal Weight</h3>
+      <p>BMI 18.5 - 24.9</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚠</div>
+      <h3>Overweight</h3>
+      <p>BMI 25 - 29.9</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔴</div>
+      <h3>Obese</h3>
+      <p>BMI 30 or above</p>
+    </div>
+  </div>
+
+  <h2>About BMI</h2>
+  <p>BMI (Body Mass Index) is a measure of body fat based on height and weight. While BMI is a useful screening tool, it doesn't directly measure body fat percentage. For a complete health assessment, consult with a healthcare professional.</p>
+
+</div>
+
+<script src="../js/main.js"></script>
+</body>
+</html>
+>>>>>>> bmi_html

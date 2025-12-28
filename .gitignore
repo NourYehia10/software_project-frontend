@@ -1,9 +1,0 @@
-.vs/
-bin/
-obj/
-publish/
-*.dll
-*.pdb
-*.cache
-*.cache.json
-*.db
