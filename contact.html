@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - Nutrition Hub</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="index.html">🏠 Home</a>
+  <a href="bmi.html">⚖️ BMI Calculator</a>
+  <a href="calories.html">🔥 Calorie Calculator</a>
+  <a href="about.html">ℹ️ About</a>
+  <a href="contact.html">📧 Contact</a>
+</nav>
+
+<h1>📧 Get In Touch</h1>
+
+<div class="container">
+  <img src="https://images.unsplash.com/photo-1516534775068-bb6a1e054c0f?w=800&h=400&fit=crop" alt="Contact Us" class="hero-image">
+  
+  <h2 style="border: none;">We'd Love to Hear From You</h2>
+  <p>Have questions, suggestions, or feedback? Reach out to us! We're always happy to help and improve our services based on your input.</p>
+
+  <div style="max-width: 600px; margin: 30px auto; background: rgba(102, 126, 234, 0.05); padding: 30px; border-radius: 10px;">
+    <form onsubmit="event.preventDefault(); sendMessage();">
+      <input type="text" id="name" placeholder="Your Name" required>
+      <input type="email" id="email" placeholder="Your Email" required>
+      <textarea id="message" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+
+    <div id="response"></div>
+  </div>
+
+  <h2>Other Ways to Connect</h2>
+  <div class="feature-cards">
+    <div class="card">
+      <div class="card-icon">📧</div>
+      <h3>Email</h3>
+      <p>support@nutritionhub.com</p>
+    </div>
+    
+    <div class="card">
+      <div class="card-icon">💬</div>
+      <h3>Live Chat</h3>
+      <p>Available Monday - Friday, 9AM - 6PM</p>
+    </div>
+    
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <h3>Social Media</h3>
+      <p>Follow us for tips and updates</p>
+    </div>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="feature-cards">
+    <div class="card">
+      <h3>How accurate are your calculations?</h3>
+      <p>Our formulas are based on scientifically validated methods used by health professionals worldwide.</p>
+    </div>
+    
+    <div class="card">
+      <h3>Is my data stored?</h3>
+      <p>No! We don't store any of your personal information. Everything is calculated on your device.</p>
+    </div>
+    
+    <div class="card">
+      <h3>Are your tools free?</h3>
+      <p>Yes! All our health calculators and tools are completely free to use, forever.</p>
+    </div>
+  </div>
+
+  <p style="margin-top: 40px; text-align: center; color: #666;">Thank you for using Nutrition Hub. We're committed to your health and wellness! 💪</p>
+
+</div>
+
+<script src="../js/main.js"></script>
+</body>
+</html>
